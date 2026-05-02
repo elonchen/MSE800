@@ -33,7 +33,8 @@ def init_db():
             user_id INTEGER NOT NULL,
             currency_id INTEGER NOT NULL,
             balance REAL DEFAULT 0,
-
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                   
             UNIQUE(user_id, currency_id),
 
             FOREIGN KEY (user_id) REFERENCES users(id),
@@ -61,6 +62,25 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (from_currency_id) REFERENCES currencies(id),
             FOREIGN KEY (to_currency_id) REFERENCES currencies(id)
+        )
+    ''')
+
+    # exchange_rates table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS exchange_rates (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            from_currency_id INTEGER NOT NULL,
+            to_currency_id INTEGER NOT NULL,
+
+            rate REAL NOT NULL,
+
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY (from_currency_id) REFERENCES currencies(id),
+            FOREIGN KEY (to_currency_id) REFERENCES currencies(id),
+
+            UNIQUE(from_currency_id, to_currency_id)
         )
     ''')
 

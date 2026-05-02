@@ -2,12 +2,13 @@ users (id, username, email, password_hash, created_at)
 
 currencies (id, code, name, symbol)
 
-wallets (id, user_id, currency_id, balance)
+wallets (id, user_id, currency_id, balance, created_at)
 
 transactions (id, user_id, from_currency_id, to_currency_id, from_amount, to_amount, exchange_rate, created_at)
 
+exchange_rates (id, from_currency_id, to_currency_id, rate, updated_at)
 
-There are **4 tables** in total.
+There are **5 tables** in total.
 
 ---
 
@@ -31,6 +32,12 @@ Records a permanent, immutable log of every currency exchange a user performs. I
 
 ---
 
+**5. `exchange_rates`**
+Stores the conversion rate between two currencies at a specific point in time. 
+Each record defines how much of a target currency can be obtained from one unit of a source currency (e.g. 1 USD = 1.67 NZD). Without this table, the system would have no centralized or maintainable way to manage real-world currency conversion values.
+
+---
+
 **Summary**
 
 | Table | Role |
@@ -39,5 +46,6 @@ Records a permanent, immutable log of every currency exchange a user performs. I
 | `currencies` | What currencies are supported |
 | `wallets` | How much of each currency a user holds |
 | `transactions` | What exchanges have taken place |
+| `exchange_rates` | What is the pricing reference |
 
 Each table captures a distinct concern, and none of them can be collapsed into another without losing either data integrity or historical information.

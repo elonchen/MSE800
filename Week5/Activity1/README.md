@@ -2,3 +2,5 @@
 
 added "view transaction detail" use case
 put two actors together in one use case
+
+updated use cases for both actors

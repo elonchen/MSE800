@@ -1,4 +1,4 @@
-```mermaid
+```
 sequenceDiagram
     actor Client
     participant DogFactory

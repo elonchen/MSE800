@@ -25,7 +25,7 @@ def main():
     )
 
     i_flight.display_flight_info()
-    print("Fare:", i_flight.calculate_fare())
+  
     i_flight.show_international_rules()
 
 

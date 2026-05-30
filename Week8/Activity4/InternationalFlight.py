@@ -17,7 +17,7 @@ class InternationalFlight(Flight):
         print("Visa required    :", self.visa_required)
 
     # Method 2 (override)
-    def calculate_fare(self):
+    def calculate_price(self):
         tax = self.base_fare * 0.15
         return self.base_fare + tax
 

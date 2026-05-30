@@ -20,7 +20,17 @@ class DomesticFlight {
     +calculate_price()
 }
 
+class InternationalFlight {
+    +passport_required: bool
+    +visa_required: bool
+    +currency: str
+    +show_international_rules()
+    +calculate_price()
+    +apply_tax()
+}
+
 Flight <|-- DomesticFlight
+Flight <|-- InternationalFlight
 ```
 
 ## Inheritance Relationship

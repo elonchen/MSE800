@@ -1,0 +1,130 @@
+<svg viewBox="0 0 900 1020" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#1a73e8"/><stop offset="100%" stop-color="#0d47a1"/></linearGradient>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0097a7"/><stop offset="100%" stop-color="#006064"/></linearGradient>
+    <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2e7d32"/><stop offset="100%" stop-color="#1b5e20"/></linearGradient>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f57c00"/><stop offset="100%" stop-color="#e65100"/></linearGradient>
+    <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#7b1fa2"/><stop offset="100%" stop-color="#4a148c"/></linearGradient>
+    <linearGradient id="g6" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#c62828"/><stop offset="100%" stop-color="#b71c1c"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,0.15)"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="1020" fill="#f8f9fc" rx="12"/>
+
+  <text x="450" y="36" text-anchor="middle" font-size="21" font-weight="700" fill="#1a1a2e">Ako Kupu — Waterfall Development Model</text>
+  <text x="450" y="55" text-anchor="middle" font-size="11.5" fill="#666">Te Reo Maori Flashcard &amp; Learner Progress Web Application  |  Group E: Eric Gomez &amp; Yirong Chen</text>
+  <line x1="60" y1="63" x2="840" y2="63" stroke="#dde" stroke-width="1.5"/>
+
+  <!-- PHASE 1 -->
+  <g filter="url(#shadow)">
+    <rect x="48" y="75" width="804" height="118" rx="9" fill="white" stroke="#dde" stroke-width="1"/>
+    <rect x="48" y="75" width="804" height="34" rx="9" fill="url(#g1)"/>
+    <rect x="48" y="95" width="804" height="14" fill="url(#g1)"/>
+  </g>
+  <text x="68" y="97" font-size="14.5" font-weight="700" fill="white">Phase 1  Requirements Analysis</text>
+  <text x="784" y="97" font-size="11" fill="#c8e0ff" text-anchor="end">Define WHAT the system does</text>
+  <text x="72" y="124" font-size="11" fill="#333">&#x25CF;  Business &amp; Cultural Requirements — Te Tiriti o Waitangi (Partnership · Participation · Protection); Kaiako/Kaiārahi review mechanism</text>
+  <text x="72" y="141" font-size="11" fill="#333">&#x25CF;  Roles &amp; Permissions — Ākonga (Student): practice &amp; progress view  |  Kaiako (Teacher): full CRUD + student progress  |  Admin: accounts &amp; categories</text>
+  <text x="72" y="158" font-size="11" fill="#333">&#x25CF;  Functional: 10 deliverable business metrics  |  Non-Functional: Security (bcrypt, Flask-Login) · Responsiveness (Bootstrap)</text>
+  <rect x="68" y="170" width="764" height="17" rx="4" fill="#e8f0fe"/>
+  <text x="76" y="182" font-size="10" fill="#1a73e8" font-weight="600">Deliverables:  SRS Document  ·  Maori Cultural Compliance &amp; Vocabulary Review Baseline Document</text>
+
+  <line x1="450" y1="194" x2="450" y2="211" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- PHASE 2 -->
+  <g filter="url(#shadow)">
+    <rect x="78" y="213" width="744" height="138" rx="9" fill="white" stroke="#dde" stroke-width="1"/>
+    <rect x="78" y="213" width="744" height="34" rx="9" fill="url(#g2)"/>
+    <rect x="78" y="233" width="744" height="14" fill="url(#g2)"/>
+  </g>
+  <text x="98" y="235" font-size="14.5" font-weight="700" fill="white">Phase 2  System Design</text>
+  <text x="808" y="235" font-size="11" fill="#b2ebf2" text-anchor="end">Define HOW the system does it</text>
+  <text x="102" y="262" font-size="11" fill="#333">&#x25CF;  High-Level Architecture: B/S architecture · Bootstrap &#x2192; Flask &#x2192; psycopg2 &#x2192; Supabase PostgreSQL (3-tier)</text>
+  <text x="102" y="279" font-size="11" fill="#333">&#x25CF;  OOP Class Design: User hierarchy (Student/Kaiako/Admin) · Flashcard hierarchy (Vocabulary/Phrase/Whakataukī) · Business logic classes</text>
+  <text x="102" y="296" font-size="11" fill="#333">&#x25CF;  Database Schema: ERD · Tables: users / flashcards / categories / practice_sessions / practice_attempts / progress_records</text>
+  <text x="102" y="313" font-size="11" fill="#333">&#x25CF;  UI &amp; Routing: Wireframe mockups per role · Flask URL routing table · Permission interception rules</text>
+  <rect x="98" y="326" width="704" height="17" rx="4" fill="#e0f7fa"/>
+  <text x="106" y="338" font-size="10" fill="#006064" font-weight="600">Deliverables:  Architecture &amp; Design Spec (Class Diagrams + ERD)  ·  SQL DDL Script  ·  UI Mockup &amp; Routing Spec</text>
+
+  <line x1="450" y1="351" x2="450" y2="368" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- PHASE 3 -->
+  <g filter="url(#shadow)">
+    <rect x="108" y="370" width="684" height="148" rx="9" fill="white" stroke="#dde" stroke-width="1"/>
+    <rect x="108" y="370" width="684" height="34" rx="9" fill="url(#g3)"/>
+    <rect x="108" y="390" width="684" height="14" fill="url(#g3)"/>
+  </g>
+  <text x="128" y="392" font-size="14.5" font-weight="700" fill="white">Phase 3  Implementation / Coding</text>
+  <text x="778" y="392" font-size="11" fill="#c8e6c9" text-anchor="end">Build strictly per design docs</text>
+  <text x="132" y="419" font-size="11" fill="#333">&#x25CF;  Environment Setup: Python env · Flask/Flask-Login/bcrypt/psycopg2 · Supabase PostgreSQL instance + DDL run · DatabaseManager class</text>
+  <text x="132" y="436" font-size="11" fill="#333">&#x25CF;  Core OOP &amp; Auth: User class hierarchy implementation · bcrypt hashing · Session-based route interceptors via Flask-Login</text>
+  <text x="132" y="453" font-size="11" fill="#333">&#x25CF;  Kaiako &amp; Admin Features: Flashcard CRUD management interfaces · Category management</text>
+  <text x="132" y="470" font-size="11" fill="#333">&#x25CF;  Ākonga Features: Card-draw algorithm (5 cards/session) · Flip-to-reveal · Correct/Incorrect submission</text>
+  <text x="132" y="487" font-size="11" fill="#333">&#x25CF;  Progress Logic: PracticeSession scoring · ProgressTracker persistence (updated after every 3 sessions)</text>
+  <rect x="128" y="500" width="644" height="17" rx="4" fill="#e8f5e9"/>
+  <text x="136" y="512" font-size="10" fill="#2e7d32" font-weight="600">Deliverables:  Fully Functional Source Code (pre-deployment)  ·  Developer Unit Test Report</text>
+
+  <line x1="450" y1="519" x2="450" y2="536" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- PHASE 4 -->
+  <g filter="url(#shadow)">
+    <rect x="138" y="538" width="624" height="148" rx="9" fill="white" stroke="#dde" stroke-width="1"/>
+    <rect x="138" y="538" width="624" height="34" rx="9" fill="url(#g4)"/>
+    <rect x="138" y="558" width="624" height="14" fill="url(#g4)"/>
+  </g>
+  <text x="158" y="560" font-size="14.5" font-weight="700" fill="white">Phase 4  Testing (QA) — Code Freeze</text>
+  <text x="748" y="560" font-size="11" fill="#ffe0b2" text-anchor="end">SRS compliance verification</text>
+  <text x="162" y="587" font-size="11" fill="#333">&#x25CF;  Unit Testing: Business methods for each OOP class (validation &amp; legitimacy checks per flashcard type)</text>
+  <text x="162" y="604" font-size="11" fill="#333">&#x25CF;  Integration Testing: Flask logic &#x2194; Supabase PostgreSQL via psycopg2 (practice records, progress update persistence)</text>
+  <text x="162" y="621" font-size="11" fill="#333">&#x25CF;  Security &amp; Permission Testing: Unauthenticated route access blocked · Ākonga cannot reach Kaiako/Admin pages</text>
+  <text x="162" y="638" font-size="11" fill="#333">&#x25CF;  UAT: Full workflow against 10 business metrics — registration &#x2192; 3 sessions &#x2192; progress chart; teacher card CRUD</text>
+  <rect x="158" y="670" width="584" height="17" rx="4" fill="#fff3e0"/>
+  <text x="166" y="682" font-size="10" fill="#e65100" font-weight="600">Deliverables:  Test Plan &amp; Cases  ·  Defect/Bug Tracking &amp; Final Test Report  ·  UAT Sign-off Document</text>
+
+  <line x1="450" y1="689" x2="450" y2="706" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- PHASE 5 -->
+  <g filter="url(#shadow)">
+    <rect x="168" y="708" width="564" height="128" rx="9" fill="white" stroke="#dde" stroke-width="1"/>
+    <rect x="168" y="708" width="564" height="34" rx="9" fill="url(#g5)"/>
+    <rect x="168" y="728" width="564" height="14" fill="url(#g5)"/>
+  </g>
+  <text x="188" y="730" font-size="14.5" font-weight="700" fill="white">Phase 5  Deployment &amp; Delivery</text>
+  <text x="718" y="730" font-size="11" fill="#e1bee7" text-anchor="end">Go live · client handover</text>
+  <text x="192" y="757" font-size="11" fill="#333">&#x25CF;  Production Config: Render Web Service &#x2192; GitHub (main/release branch) · Env vars (DATABASE_URL, SECRET_KEY)</text>
+  <text x="192" y="774" font-size="11" fill="#333">&#x25CF;  Launch &amp; Verification: Automated deploy · Smoke testing on Render · Supabase cloud DB connection confirmed</text>
+  <text x="192" y="791" font-size="11" fill="#333">&#x25CF;  Handover: README.md (setup + architecture) · Role-specific User Manuals (Ākonga / Kaiako / Admin) · Ops Guide</text>
+  <rect x="188" y="820" width="524" height="17" rx="4" fill="#f3e5f5"/>
+  <text x="196" y="832" font-size="10" fill="#6a1b9a" font-weight="600">Deliverables:  Live App on Render  ·  Complete GitHub Repository  ·  User Manual &amp; Deployment Guide</text>
+
+  <line x1="450" y1="837" x2="450" y2="854" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- PHASE 6 -->
+  <g filter="url(#shadow)">
+    <rect x="198" y="856" width="504" height="108" rx="9" fill="white" stroke="#dde" stroke-width="1"/>
+    <rect x="198" y="856" width="504" height="34" rx="9" fill="url(#g6)"/>
+    <rect x="198" y="876" width="504" height="14" fill="url(#g6)"/>
+  </g>
+  <text x="218" y="878" font-size="14.5" font-weight="700" fill="white">Phase 6  Maintenance</text>
+  <text x="688" y="878" font-size="11" fill="#ffcdd2" text-anchor="end">Ongoing post-delivery support</text>
+  <text x="222" y="905" font-size="11" fill="#333">&#x25CF;  Exception Monitoring: Render runtime logs · Supabase performance metrics</text>
+  <text x="222" y="922" font-size="11" fill="#333">&#x25CF;  Vocabulary Correction: Amend Te Reo Maori spelling/translation errors via Kaiako &amp; Ākonga feedback</text>
+  <text x="222" y="939" font-size="11" fill="#333">&#x25CF;  Vulnerability Patching: Edge-case bug fixes · Python dependency security updates</text>
+
+  <!-- Sequential label on left -->
+  <line x1="34" y1="90" x2="34" y2="965" stroke="#ccc" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <text x="22" y="530" font-size="10.5" fill="#aaa" text-anchor="middle" transform="rotate(-90,22,530)">Sequential Phase-Gated Flow</text>
+
+  <!-- Legend -->
+  <rect x="48" y="980" width="804" height="30" rx="6" fill="#f0f4ff" stroke="#d0d8f0" stroke-width="1"/>
+  <rect x="62" y="989" width="11" height="11" rx="2" fill="#1a73e8"/><text x="77" y="999" font-size="9.5" fill="#333">Requirements</text>
+  <rect x="158" y="989" width="11" height="11" rx="2" fill="#0097a7"/><text x="173" y="999" font-size="9.5" fill="#333">Design</text>
+  <rect x="222" y="989" width="11" height="11" rx="2" fill="#2e7d32"/><text x="237" y="999" font-size="9.5" fill="#333">Implementation</text>
+  <rect x="335" y="989" width="11" height="11" rx="2" fill="#f57c00"/><text x="350" y="999" font-size="9.5" fill="#333">Testing</text>
+  <rect x="400" y="989" width="11" height="11" rx="2" fill="#7b1fa2"/><text x="415" y="999" font-size="9.5" fill="#333">Deployment</text>
+  <rect x="492" y="989" width="11" height="11" rx="2" fill="#c62828"/><text x="507" y="999" font-size="9.5" fill="#333">Maintenance</text>
+  <text x="844" y="999" font-size="9.5" fill="#aaa" text-anchor="end">Each phase must fully complete before the next begins</text>
+</svg>

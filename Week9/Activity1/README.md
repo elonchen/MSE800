@@ -6,6 +6,9 @@ Group E: Eric Gomez & Yirong Chen
 
 # Ako Kupu: A Te Reo Māori Flashcard and Learner Progress Web Application
 
+![Ako Kupu Waterfall Diagram](./ako_kupu_waterfall.svg)
+
+
 ## 1. Requirements Analysis Phase
 
 The core objective of this phase is to establish what the system "will do," culminating in an unalterable Software Requirements Specification (SRS) document.

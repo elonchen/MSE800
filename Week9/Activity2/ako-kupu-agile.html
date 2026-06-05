@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ako Kupu — Agile Sprint Board</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #161b27;
+    --surface2: #1e2535;
+    --border: #2a3348;
+    --text: #e8eaf0;
+    --text-muted: #6b7591;
+    --text-dim: #3d4a65;
+
+    --d0: #f0c060;
+    --s1: #5b8ef0;
+    --s2a: #50c896;
+    --s2b: #c87850;
+    --s3: #c86080;
+
+    --done-bg: #1a2918;
+    --done-text: #4a9060;
+    --done-border: #2a4030;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 40px 48px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .header-left h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .header-left h1 em {
+    font-style: italic;
+    color: var(--d0);
+  }
+  .header-left p {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 300;
+  }
+  .progress-ring-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .progress-ring-wrap span {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  #overall-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ── TIMELINE BAR ── */
+  .timeline {
+    display: flex;
+    align-items: stretch;
+    padding: 0 48px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .tl-item {
+    flex: 1;
+    min-width: 100px;
+    padding: 14px 0 12px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .tl-item:last-child { border-right: none; }
+  .tl-item .tl-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+  }
+  .tl-item .tl-title {
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .tl-item .tl-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin: 6px auto 0;
+  }
+  .tl-d0 .tl-dot  { background: var(--d0); }
+  .tl-s1 .tl-dot  { background: var(--s1); }
+  .tl-s2 .tl-dot  { background: var(--s2a); }
+  .tl-s3 .tl-dot  { background: var(--s3); }
+
+  /* ── MAIN ── */
+  main {
+    padding: 32px 48px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1100px;
+  }
+
+  /* ── SPRINT CARD ── */
+  .sprint-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .sprint-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .sprint-header:hover { background: var(--surface2); }
+  .sprint-pip {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .sprint-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    flex: 1;
+  }
+  .sprint-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  .sprint-progress-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    min-width: 48px;
+    text-align: right;
+  }
+  .chevron {
+    color: var(--text-dim);
+    font-size: 16px;
+    transition: transform 0.2s;
+    margin-left: 6px;
+  }
+  .sprint-card.open .chevron { transform: rotate(180deg); }
+
+  /* mini progress bar on header */
+  .sprint-bar-wrap {
+    width: 80px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .sprint-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── SPRINT BODY ── */
+  .sprint-body {
+    display: none;
+    padding: 0 20px 20px;
+  }
+  .sprint-card.open .sprint-body { display: block; }
+
+  /* Objective */
+  .objective-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+  .objective-box strong {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── SECTION (Tasks / Deliverables / Outcomes) ── */
+  .section {
+    margin-bottom: 14px;
+  }
+  .section-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 6px;
+    user-select: none;
+  }
+  .section-toggle:hover .section-title { color: var(--text); }
+  .section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    flex: 1;
+    transition: color 0.15s;
+  }
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .section-chev {
+    font-size: 12px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+  }
+  .section.open .section-chev { transform: rotate(180deg); }
+  .section-items { display: none; }
+  .section.open .section-items { display: block; }
+
+  /* ── TRACK LABEL ── */
+  .track-label {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin: 10px 0 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .track-a { background: rgba(80,200,150,0.12); color: var(--s2a); border: 1px solid rgba(80,200,150,0.25); }
+  .track-b { background: rgba(200,120,80,0.12); color: var(--s2b); border: 1px solid rgba(200,120,80,0.25); }
+  .track-new { background: rgba(200,96,128,0.12); color: var(--s3); border: 1px solid rgba(200,96,128,0.25); }
+
+  /* ── TASK ITEM ── */
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+  }
+  .task-item:hover { background: var(--surface2); }
+  .task-item.done {
+    background: var(--done-bg);
+    border: 1px solid var(--done-border);
+  }
+  .task-cb {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .task-item.done .task-cb {
+    background: var(--done-text);
+    border-color: var(--done-text);
+  }
+  .task-cb svg { display: none; }
+  .task-item.done .task-cb svg { display: block; }
+  .task-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.55;
+    transition: color 0.15s;
+  }
+  .task-item.done .task-text {
+    color: var(--done-text);
+    text-decoration: line-through;
+    text-decoration-color: rgba(74,144,96,0.5);
+  }
+  .task-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    letter-spacing: 0.04em;
+  }
+  .tag-must   { background: rgba(200,96,80,0.15); color: #e08070; border: 1px solid rgba(200,96,80,0.25); }
+  .tag-should { background: rgba(200,170,50,0.12); color: #c8a830; border: 1px solid rgba(200,170,50,0.2); }
+  .tag-new    { background: rgba(200,96,128,0.12); color: var(--s3); border: 1px solid rgba(200,96,128,0.25); }
+
+  /* deliverable & outcome items (no checkbox logic, just visual) */
+  .del-item, .out-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 5px 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .del-item::before {
+    content: '→';
+    color: var(--text-dim);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .out-item::before {
+    content: '✓';
+    color: var(--text-dim);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── DEPENDENCY ── */
+  .dep-box {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.9;
+    white-space: pre;
+  }
+
+  /* colour accents per sprint */
+  .pip-d0 { background: var(--d0); }
+  .pip-s1 { background: var(--s1); }
+  .pip-s2 { background: var(--s2a); }
+  .pip-s3 { background: var(--s3); }
+  .bar-d0 { background: var(--d0); }
+  .bar-s1 { background: var(--s1); }
+  .bar-s2 { background: var(--s2a); }
+  .bar-s3 { background: var(--s3); }
+
+  /* ── GLOBAL ACTIONS ── */
+  .global-bar {
+    padding: 0 48px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: -12px;
+  }
+  .btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover {
+    background: var(--surface2);
+    color: var(--text);
+    border-color: var(--text-dim);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Ako Kupu &mdash; <em>Agile Sprint Board</em></h1>
+    <p>Te Reo Māori Flashcard &amp; Learner Progress Web Application &nbsp;·&nbsp; 4–5 Week MVP</p>
+  </div>
+  <div class="progress-ring-wrap">
+    <svg width="64" height="64" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="26" fill="none" stroke="#2a3348" stroke-width="5"/>
+      <circle id="ring-fill" cx="32" cy="32" r="26" fill="none" stroke="#5b8ef0"
+        stroke-width="5" stroke-linecap="round"
+        stroke-dasharray="163.4" stroke-dashoffset="163.4"
+        transform="rotate(-90 32 32)" style="transition:stroke-dashoffset 0.6s ease"/>
+      <text x="32" y="36" text-anchor="middle" font-family="DM Mono,monospace"
+        font-size="13" fill="#e8eaf0" id="ring-pct">0%</text>
+    </svg>
+    <span id="overall-label">0 / 0 tasks</span>
+  </div>
+</header>
+
+<div class="timeline">
+  <div class="tl-item tl-d0">
+    <div class="tl-label">Pre-Sprint</div>
+    <div class="tl-title">Day 0</div>
+    <div class="tl-dot"></div>
+  </div>
+  <div class="tl-item tl-s1">
+    <div class="tl-label">Week 1 – 2</div>
+    <div class="tl-title">Sprint 1</div>
+    <div class="tl-dot"></div>
+  </div>
+  <div class="tl-item tl-s2">
+    <div class="tl-label">Week 2 – 3</div>
+    <div class="tl-title">Sprint 2</div>
+    <div class="tl-dot"></div>
+  </div>
+  <div class="tl-item tl-s3">
+    <div class="tl-label">Week 4 – 5</div>
+    <div class="tl-title">Sprint 3</div>
+    <div class="tl-dot"></div>
+  </div>
+</div>
+
+<div class="global-bar" style="margin-top:28px;">
+  <button class="btn" onclick="expandAll()">Expand All</button>
+  <button class="btn" onclick="collapseAll()">Collapse All</button>
+  <button class="btn" onclick="clearAll()">Clear Done</button>
+</div>
+
+<main id="main"></main>
+
+<script>
+const SPRINTS = [
+  {
+    id: "d0",
+    pip: "pip-d0", bar: "bar-d0",
+    title: "Day 0 — Environment & Foundation",
+    meta: "1–2 days · Pre-Sprint",
+    objective: "Establish a stable, deployable foundation and align the full team on design and interface contracts before Sprint 1 begins.",
+    dependency: null,
+    sections: [
+      {
+        title: "Tasks", items: [
+          { text: "Initialise Flask project structure (app/, models/, routes/, templates/, static/)", tag: "must" },
+          { text: "Configure .env (DATABASE_URL, SECRET_KEY) and .gitignore", tag: "must" },
+          { text: "Create all 6 tables in Supabase: users, categories, flashcards, practice_sessions, practice_attempts, progress_records", tag: "must" },
+          { text: "Write DatabaseManager class using psycopg2 and verify connection", tag: "must" },
+          { text: "Connect GitHub repository to Render; confirm auto-deploy pipeline on push to main", tag: "must" },
+          { text: "Import seed data (2 categories, ≥16 flashcards) and verify via SQL query", tag: "must" },
+          { text: "Complete cultural review and sign-off on all seed vocabulary with kaiako", tag: "must" },
+          { text: "Produce low-fidelity wireframe for all 13 pages (Figma / Excalidraw / hand-drawn)", tag: "new", track: "new" },
+          { text: "Define route/interface contract table — request & response format for every route", tag: "new", track: "new" },
+          { text: "Define and document Definition of Done — all 8 criteria agreed by team", tag: "new", track: "new" },
+        ]
+      },
+      {
+        title: "Deliverables", type: "del", items: [
+          { text: "Flask app runs locally — flask run shows homepage" },
+          { text: "All 6 Supabase tables created; DatabaseManager connection test passes" },
+          { text: "Render URL accessible (placeholder homepage sufficient)" },
+          { text: "Seed data imported — SELECT COUNT(*) FROM flashcards returns ≥16" },
+          { text: "Wireframes completed for all 13 pages" },
+          { text: "Route interface contract table finalised and shared with team" },
+          { text: "Definition of Done agreed and documented" },
+        ]
+      },
+      {
+        title: "Outcomes", type: "out", items: [
+          { text: "Any team member can run the app after git pull + .env setup" },
+          { text: "Render URL returns HTTP 200" },
+          { text: "Database query returns ≥16 flashcards across 2 categories" },
+          { text: "Every developer can open the wireframe and know what each page contains before writing code" },
+          { text: "Route contracts are frozen — Track A and Track B can develop in parallel without format conflicts" },
+        ]
+      },
+    ]
+  },
+  {
+    id: "s1",
+    pip: "pip-s1", bar: "bar-s1",
+    title: "Sprint 1 — Authentication & Role System",
+    meta: "Week 1 – first half of Week 2",
+    objective: "Implement secure registration, login, and logout for Student and Kaiako roles. Enforce role-based access control so that all subsequent features can be built within correct permission boundaries.",
+    dependency: "Day 0 → Sprint 1\n  Requires: DB tables exist · DatabaseManager connected · Render pipeline live",
+    sections: [
+      {
+        title: "Tasks", items: [
+          { text: "Install and configure Flask-Login and bcrypt", tag: "must" },
+          { text: "Implement POST /register — form validation + password hashing + database write", tag: "must" },
+          { text: "Implement POST /login — database lookup + bcrypt verification + session creation", tag: "must" },
+          { text: "Implement GET /logout — session clear + redirect to /login", tag: "must" },
+          { text: "Apply @login_required decorator to all protected routes", tag: "must" },
+          { text: "Write User base class — attributes: id, email, role; methods: get_id(), get_role()", tag: "should" },
+          { text: "Write Student(User) subclass — get_role() returns \"student\"", tag: "should" },
+          { text: "Write Kaiako(User) subclass — get_role() returns \"kaiako\"", tag: "should" },
+          { text: "Implement user_loader callback — restores correct subclass from DB by user id", tag: "should" },
+          { text: "Create register.html — email, password, role selector, validation error messages", tag: "must" },
+          { text: "Create login.html — email, password, error message display", tag: "must" },
+          { text: "Create student_dashboard.html placeholder — welcome message + role label + nav links", tag: "must" },
+          { text: "Create kaiako_dashboard.html placeholder — welcome message + role label + nav links", tag: "must" },
+          { text: "Handle errors: duplicate email, wrong password, direct access to protected route", tag: "must" },
+          { text: "DoD check — verify all 8 criteria met for every Story before Sprint Review", tag: "new", track: "new" },
+          { text: "Unit tests: Student().get_role(), Kaiako().get_role(), bcrypt hash verification", tag: "new", track: "new" },
+          { text: "Integration tests via Flask test client — /register, /login, /logout, role access control", tag: "new", track: "new" },
+        ]
+      },
+      {
+        title: "Deliverables", type: "del", items: [
+          { text: "Working registration and login flow with form validation and error messages" },
+          { text: "models/user.py — User, Student, Kaiako classes with docstrings" },
+          { text: "Separate dashboard placeholder pages for Student and Kaiako" },
+          { text: "All non-public routes protected by @login_required + role check" },
+          { text: "pytest output showing all unit and integration tests passing" },
+          { text: "Sprint 1 manual test record (register → login → dashboard → logout → blocked redirect)" },
+        ]
+      },
+      {
+        title: "Outcomes", type: "out", items: [
+          { text: "Ākonga can register; password stored as hash (no plaintext in DB confirmed via SQL)" },
+          { text: "Student and Kaiako redirect to separate dashboards after login" },
+          { text: "Unauthenticated access to /student/dashboard redirects to /login" },
+          { text: "Student token cannot access /kaiako routes — returns 403" },
+          { text: "Student().get_role() = \"student\", Kaiako().get_role() = \"kaiako\" — unit tests pass" },
+          { text: "Incorrect password shows friendly error, not a server exception" },
+        ]
+      },
+    ]
+  },
+  {
+    id: "s2",
+    pip: "pip-s2", bar: "bar-s2",
+    title: "Sprint 2 — Flashcard Management & Practice Sessions",
+    meta: "Second half of Week 2 – Week 3",
+    objective: "Enable Kaiako to create, view, edit, and delete flashcards through the web interface. Enable ākonga to select a category, complete a full practice session with card flipping and self-marking, and have all results persisted to the database.",
+    dependency: "Sprint 1 → Sprint 2\n  Track A requires: Kaiako login + role routing working\n  Track B requires: Student login session + seed data in DB\n\nPre-Sprint alignment: freeze flashcards table schema · agree card queue\n  session format · review wireframes for all 8 Sprint 2 pages",
+    sections: [
+      {
+        title: "Tasks — Track A: Flashcard Management (Kaiako)", track: "a", items: [
+          { text: "Write Flashcard base class — attributes: id, front, back, card_type, category_id; methods: get_display_content(), validate()", tag: "must" },
+          { text: "Write VocabularyCard(Flashcard) — validate() checks single-word format; get_display_content() returns \"Word: {front}\"", tag: "must" },
+          { text: "Write PhraseCard(Flashcard) — validate() checks phrase length ≤50 chars; get_display_content() returns \"Phrase: {front}\"", tag: "must" },
+          { text: "Implement GET /kaiako/flashcards — list all flashcards filtered by category", tag: "must" },
+          { text: "Implement GET/POST /kaiako/flashcards/new — create form + database write", tag: "must" },
+          { text: "Implement GET/POST /kaiako/flashcards/<id>/edit — edit form + database update", tag: "should" },
+          { text: "Implement POST /kaiako/flashcards/<id>/delete — confirm prompt + delete", tag: "should" },
+          { text: "Implement GET/POST /kaiako/categories — list and create vocabulary categories", tag: "should" },
+          { text: "Create templates: flashcard_list.html, flashcard_form.html, category_list.html", tag: "must" },
+        ]
+      },
+      {
+        title: "Tasks — Track B: Practice Sessions (Ākonga)", track: "b", items: [
+          { text: "Implement GET /student/practice — category selection page", tag: "must" },
+          { text: "Implement POST /student/practice/start — create PracticeSession, randomly draw ≥5 cards, store queue in Flask session; edge case: <5 cards → friendly error", tag: "must" },
+          { text: "Implement GET /student/practice/card — display current card front face", tag: "must" },
+          { text: "Implement card flip — JS toggle to reveal back face (fallback: separate /reveal route)", tag: "must" },
+          { text: "Implement POST /student/practice/attempt — write PracticeAttempt, advance to next card or redirect to result", tag: "must" },
+          { text: "Implement GET /student/practice/result — calculate score, update PracticeSession, display result", tag: "must" },
+          { text: "Create templates: category_select.html, practice_card.html, practice_result.html", tag: "must" },
+        ]
+      },
+      {
+        title: "Testing & Integration", track: "new", items: [
+          { text: "Manual test of full Kaiako CRUD flow with screenshots at each step", tag: "must" },
+          { text: "Manual test of full ākonga practice flow — select → flip → mark → result", tag: "must" },
+          { text: "Database verification: practice_sessions and practice_attempts populated after session", tag: "must" },
+          { text: "Unit tests: validate() on both subclasses, get_display_content() polymorphism, score calculation", tag: "new", track: "new" },
+          { text: "Integration tests: POST /kaiako/flashcards/new (valid & invalid), /practice/start (edge case), /practice/attempt, /practice/result score", tag: "new", track: "new" },
+          { text: "DoD check — all 8 criteria verified for each Story before Sprint Review", tag: "new", track: "new" },
+        ]
+      },
+      {
+        title: "Deliverables", type: "del", items: [
+          { text: "models/flashcard.py — Flashcard, VocabularyCard, PhraseCard with docstrings" },
+          { text: "Kaiako flashcard CRUD interface (list, create, edit, delete, categories)" },
+          { text: "Ākonga practice flow — category select → flip card → self-mark → result page" },
+          { text: "JS card flip working without full page reload" },
+          { text: "pytest output — all unit and integration tests passing" },
+          { text: "DB screenshots confirming practice_sessions and practice_attempts populated" },
+          { text: "Sprint 2 manual test record (screenshots of both tracks)" },
+        ]
+      },
+      {
+        title: "Outcomes", type: "out", items: [
+          { text: "Kaiako creates a VocabularyCard via web form — it appears in the flashcard list after saving" },
+          { text: "Edited flashcard content updated in DB (confirmed via SQL)" },
+          { text: "Ākonga completes ≥5 card session → result shows \"X / Y correct\" correctly" },
+          { text: "practice_attempts contains exactly 5 records linked to the completed session" },
+          { text: "VocabularyCard and PhraseCard return different get_display_content() — polymorphism confirmed" },
+          { text: "Card answer revealed without full page reload" },
+          { text: "Selecting a category with <5 cards shows error message, not a crash" },
+        ]
+      },
+    ]
+  },
+  {
+    id: "s3",
+    pip: "pip-s3", bar: "bar-s3",
+    title: "Sprint 3 — Progress Tracking, Acceptance Testing & Deployment",
+    meta: "Week 4 – Week 5",
+    objective: "Implement progress tracking that updates automatically after every session. Complete a full layered test suite. Deliver a stable, documented application on Render satisfying all defined success criteria.",
+    dependency: "Sprint 2 → Sprint 3\n  Requires: practice_sessions writing data (Track B) · flashcards table populated (Track A)\n  upsert_progress() data model must be agreed before Sprint 3 starts",
+    sections: [
+      {
+        title: "Tasks — Progress Tracking", items: [
+          { text: "Implement upsert_progress(user_id, category_id, correct, total) — INSERT or UPDATE progress_records using composite key", tag: "must" },
+          { text: "Call upsert_progress() at end of /student/practice/result route", tag: "must" },
+          { text: "Implement GET /student/progress — query all progress_records for current_user", tag: "must" },
+          { text: "Create progress.html — per-category: total sessions, cumulative accuracy (%), last practised date", tag: "must" },
+          { text: "Add \"View My Progress\" link on student_dashboard.html", tag: "must" },
+        ]
+      },
+      {
+        title: "Tasks — OOP Completion & Error Pages", items: [
+          { text: "Finalise validate() implementations in VocabularyCard and PhraseCard", tag: "should" },
+          { text: "Add complete docstrings to all classes (User, Student, Kaiako, Flashcard, VocabularyCard, PhraseCard)", tag: "should" },
+          { text: "Create 403.html — unauthorised access page with link back to dashboard", tag: "new", track: "new" },
+          { text: "Create 404.html — page not found with link to homepage", tag: "new", track: "new" },
+          { text: "Create 500.html — server error page with link to homepage", tag: "new", track: "new" },
+          { text: "Register @app.errorhandler(403), (404), (500) in app.py", tag: "new", track: "new" },
+        ]
+      },
+      {
+        title: "Full Test Suite", track: "new", items: [
+          { text: "Unit tests: upsert_progress() creates new record; updates existing (no duplicates); accuracy calculation", tag: "new", track: "new" },
+          { text: "Re-run all Sprint 1 + Sprint 2 unit tests — confirm no regressions", tag: "new", track: "new" },
+          { text: "Integration tests: GET /student/progress (200 + correct data), progress update after 2nd session, /progress as Kaiako → 403, unknown route → 404", tag: "new", track: "new" },
+          { text: "Acceptance tests (manual) — all 9 success criteria tested with screenshots or test output", tag: "must" },
+          { text: "Edge case tests: empty category, 3+ sessions same category (cumulative, not reset), unauthenticated route access", tag: "should" },
+          { text: "Full end-to-end flow on Render production URL — register → practice → view progress", tag: "must" },
+        ]
+      },
+      {
+        title: "Tasks — Documentation & Deployment", items: [
+          { text: "Write README.md — project overview, local setup steps, env variable list, deployment instructions", tag: "should" },
+          { text: "Create database ER diagram and include in README.md or /docs", tag: "should" },
+          { text: "Close all completed GitHub issues; archive Sprint board in GitHub Projects", tag: "should" },
+          { text: "Confirm all 13 pages return expected responses on Render production URL", tag: "must" },
+          { text: "Confirm environment variables correctly set on Render (no hardcoded secrets)", tag: "must" },
+          { text: "Final check: 403/404/500 error pages render correctly in production", tag: "must" },
+        ]
+      },
+      {
+        title: "Deliverables", type: "del", items: [
+          { text: "progress.html displaying per-category statistics for logged-in ākonga" },
+          { text: "upsert_progress() triggered automatically after every session" },
+          { text: "403.html, 404.html, 500.html with registered error handlers" },
+          { text: "Full pytest output — unit + integration tests all passing" },
+          { text: "Acceptance test record — 9 criteria, each with screenshot or test output" },
+          { text: "README.md with ER diagram and deployment instructions" },
+          { text: "GitHub repository — complete commit history, closed issues, archived Sprint board" },
+          { text: "Render production URL — publicly accessible, all core features functional" },
+        ]
+      },
+      {
+        title: "Outcomes", type: "out", items: [
+          { text: "Progress page shows correct cumulative stats per category" },
+          { text: "After 3 sessions in same category, progress_records accumulates (not reset)" },
+          { text: "Accessing any protected route without a session → /login redirect" },
+          { text: "Accessing a Kaiako route as Student → 403 page (not a crash)" },
+          { text: "Accessing a non-existent route → 404 page (not a crash)" },
+          { text: "All 9 acceptance criteria verified with evidence" },
+          { text: "pytest suite passes with 0 failures on final run" },
+          { text: "Production URL confirmed working by someone other than the deploying developer" },
+        ]
+      },
+    ]
+  }
+];
+
+const TRACK_LABEL = { a: "Track A", b: "Track B", new: "New" };
+const TRACK_CLASS = { a: "track-a", b: "track-b", new: "track-new" };
+const TAG_CLASS   = { must: "tag-must", should: "tag-should", new: "tag-new" };
+
+// State: done tasks keyed by "sprintId-sectionIdx-itemIdx"
+let done = JSON.parse(localStorage.getItem("akoKupuDone") || "{}");
+
+function saveState() { localStorage.setItem("akoKupuDone", JSON.stringify(done)); }
+
+function updateRing() {
+  let total = 0, checked = 0;
+  document.querySelectorAll(".task-item").forEach(el => {
+    total++;
+    if (el.classList.contains("done")) checked++;
+  });
+  const pct = total ? Math.round(checked / total * 100) : 0;
+  const circ = 163.4;
+  document.getElementById("ring-fill").setAttribute("stroke-dashoffset", circ - circ * pct / 100);
+  document.getElementById("ring-pct").textContent = pct + "%";
+  document.getElementById("overall-label").textContent = checked + " / " + total + " tasks";
+}
+
+function updateSprintBar(sprintId) {
+  const card = document.getElementById("sprint-" + sprintId);
+  if (!card) return;
+  const tasks = card.querySelectorAll(".task-item");
+  const doneTasks = card.querySelectorAll(".task-item.done");
+  const pct = tasks.length ? doneTasks.length / tasks.length * 100 : 0;
+  card.querySelector(".sprint-bar-fill").style.width = pct + "%";
+  card.querySelector(".sprint-progress-text").textContent = doneTasks.length + "/" + tasks.length;
+}
+
+function buildSectionItems(section, sprintId, sIdx) {
+  if (section.type === "del") {
+    return section.items.map(it => `<div class="del-item">${it.text}</div>`).join("");
+  }
+  if (section.type === "out") {
+    return section.items.map(it => `<div class="out-item">${it.text}</div>`).join("");
+  }
+  // tasks
+  return section.items.map((it, iIdx) => {
+    const key = `${sprintId}-${sIdx}-${iIdx}`;
+    const isDone = !!done[key];
+    const trackHtml = it.track ? `<span class="task-tag ${TRACK_CLASS[it.track] || ""}">${TRACK_LABEL[it.track] || ""}</span>` : "";
+    const tagHtml = it.tag ? `<span class="task-tag ${TAG_CLASS[it.tag] || ""}">${it.tag.toUpperCase()}</span>` : "";
+    return `
+      <div class="task-item${isDone ? " done" : ""}" data-key="${key}" onclick="toggleTask(this)">
+        <div class="task-cb">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+            <path d="M1 4L3.5 6.5L9 1" stroke="#0f1117" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="task-text">${it.text}</div>
+        ${trackHtml}${tagHtml}
+      </div>`;
+  }).join("");
+}
+
+function buildSprint(sp) {
+  const sectionsHtml = sp.sections.map((sec, sIdx) => {
+    const isTask = !sec.type;
+    const trackLabel = sec.track ? `<span class="track-label ${TRACK_CLASS[sec.track]}">${TRACK_LABEL[sec.track]}</span>` : "";
+    const countSpan = isTask ? `<span class="section-count" id="sc-${sp.id}-${sIdx}"></span>` : "";
+    return `
+      <div class="section" id="sec-${sp.id}-${sIdx}">
+        ${trackLabel}
+        <div class="section-toggle" onclick="toggleSection(this)">
+          <span class="section-title">${sec.title}</span>
+          ${countSpan}
+          <span class="section-chev">▾</span>
+        </div>
+        <div class="section-items">
+          ${buildSectionItems(sec, sp.id, sIdx)}
+        </div>
+      </div>`;
+  }).join("");
+
+  const depHtml = sp.dependency
+    ? `<div class="dep-box">${sp.dependency}</div>` : "";
+
+  return `
+    <div class="sprint-card" id="sprint-${sp.id}">
+      <div class="sprint-header" onclick="toggleSprint(this)">
+        <div class="sprint-pip ${sp.pip}"></div>
+        <div class="sprint-title">${sp.title}</div>
+        <div class="sprint-meta">${sp.meta}</div>
+        <div class="sprint-bar-wrap">
+          <div class="sprint-bar-fill ${sp.bar}" style="width:0%"></div>
+        </div>
+        <div class="sprint-progress-text">0/0</div>
+        <div class="chevron">▾</div>
+      </div>
+      <div class="sprint-body">
+        <div class="objective-box">
+          <strong>Objective</strong>
+          ${sp.objective}
+        </div>
+        ${depHtml}
+        ${sectionsHtml}
+      </div>
+    </div>`;
+}
+
+function render() {
+  document.getElementById("main").innerHTML = SPRINTS.map(buildSprint).join("");
+  // open all sections by default
+  document.querySelectorAll(".section").forEach(s => {
+    s.classList.add("open");
+  });
+  // update counts and bars
+  SPRINTS.forEach(sp => {
+    sp.sections.forEach((sec, sIdx) => {
+      updateSectionCount(sp.id, sIdx);
+    });
+    updateSprintBar(sp.id);
+  });
+  updateRing();
+}
+
+function toggleTask(el) {
+  const key = el.dataset.key;
+  if (done[key]) { delete done[key]; el.classList.remove("done"); }
+  else           { done[key] = 1;    el.classList.add("done"); }
+  saveState();
+  // update counts
+  const [spId, sIdx] = key.split("-");
+  updateSectionCount(spId, parseInt(sIdx));
+  updateSprintBar(spId);
+  updateRing();
+}
+
+function updateSectionCount(spId, sIdx) {
+  const el = document.getElementById(`sc-${spId}-${sIdx}`);
+  if (!el) return;
+  const sec = document.getElementById(`sec-${spId}-${sIdx}`);
+  if (!sec) return;
+  const all = sec.querySelectorAll(".task-item");
+  const d   = sec.querySelectorAll(".task-item.done");
+  el.textContent = all.length ? `${d.length}/${all.length}` : "";
+}
+
+function toggleSprint(headerEl) {
+  const card = headerEl.closest(".sprint-card");
+  card.classList.toggle("open");
+}
+
+function toggleSection(toggleEl) {
+  const sec = toggleEl.closest(".section");
+  sec.classList.toggle("open");
+}
+
+function expandAll() {
+  document.querySelectorAll(".sprint-card").forEach(c => c.classList.add("open"));
+  document.querySelectorAll(".section").forEach(s => s.classList.add("open"));
+}
+function collapseAll() {
+  document.querySelectorAll(".sprint-card").forEach(c => c.classList.remove("open"));
+}
+function clearAll() {
+  if (!confirm("Clear all completed tasks?")) return;
+  done = {};
+  saveState();
+  render();
+}
+
+render();
+// open first sprint by default
+document.getElementById("sprint-d0").classList.add("open");
+</script>
+</body>
+</html>

@@ -40,6 +40,77 @@ graph LR
     end
 ```
 
+## Call Graph
+ 
+```mermaid
+graph TD
+    main((main))
+ 
+    subgraph AuthModule["Auth Module"]
+        register((register))
+        login((login))
+        logout((logout))
+    end
+ 
+    subgraph UserModule["User Module"]
+        profile((manage_profile))
+        forgot((forgot_password))
+        reset((reset_password))
+    end
+ 
+    subgraph Helpers["Shared Helpers"]
+        validate((validate_input))
+        hash((hash_password))
+        token((gen_reset_token))
+        email((send_email))
+        db[(db_access)]
+    end
+ 
+    main --> register
+    main --> login
+    main --> logout
+    main --> profile
+    main --> forgot
+    main --> reset
+ 
+    register --> validate
+    register --> hash
+    register --> db
+ 
+    login --> hash
+    login --> db
+ 
+    logout --> db
+ 
+    profile --> validate
+    profile --> db
+ 
+    forgot --> token
+    forgot --> email
+    forgot --> db
+ 
+    reset --> token
+    reset --> hash
+    reset --> db
+```
+ 
+## Function Responsibilities
+ 
+| Layer | Function | Responsibility |
+|-------|----------|----------------|
+| Entry | `main` | Application entry point, routes to all feature functions |
+| Auth | `register` | Handle registration (Full Name, Date of Birth, credentials) |
+| Auth | `login` | Verify credentials and issue a session |
+| Auth | `logout` | Clear the active session |
+| User | `manage_profile` | View and edit profile (Full Name + DOB) |
+| User | `forgot_password` | Generate a reset token and send the reset email |
+| User | `reset_password` | Validate token and set a new password |
+| Helper | `validate_input` | Validate and sanitise user input |
+| Helper | `hash_password` | Hash a plaintext password (e.g. bcrypt) |
+| Helper | `gen_reset_token` | Generate a time-limited password-reset token |
+| Helper | `send_email` | Send transactional email (reset link) |
+| Helper | `db_access` | Unified data-access layer (insert / query / update) |
+
 ## Registration & Login Flow
 
 ```mermaid

@@ -1,0 +1,35 @@
+<h1>Profile</h1>
+
+<form method="post">
+
+    Full Name
+
+    <br>
+
+    <input
+        name="full_name"
+        value="{{ user.full_name }}">
+
+    <br><br>
+
+    Date of Birth
+
+    <br>
+
+    <input
+        name="date_of_birth"
+        value="{{ user.date_of_birth }}">
+
+    <br><br>
+
+    <button>
+        Save
+    </button>
+
+</form>
+
+<br>
+
+<a href="/logout">
+Logout
+</a>
